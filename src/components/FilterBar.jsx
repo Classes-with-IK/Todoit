@@ -1,6 +1,5 @@
-import { useFilterStore } from './store/filterStore'
+import { useFilterStore } from '../store/filterStore'
 
-// Borrow the same colors map used in TodoForm for the type badges
 const colors = {
   all: '#6b7280',
   Urgent: '#ef4444',

@@ -1,31 +1,29 @@
 import { create } from 'zustand'
 
 export const useTodoStore = create((set) => ({
-  todos: [
-    { id: 1, text: 'Buy fresh coffee beans', completed: true, type: 'Urgent' },
-    { id: 2, text: 'Design the mobile interface mockup', completed: false, type: 'Planning' },
-    { id: 3, text: 'Call Sarah for project sync', completed: false, type: 'Personal' },
-  ],
+  todos: [],
 
-  addTodo: (text, type) =>
+  addTodo: (todo) =>
     set((state) => ({
-      todos: [...state.todos, { id: Date.now(), text, completed: false, type }],
+      todos: [todo, ...state.todos],
     })),
 
   toggleTodo: (id) =>
     set((state) => ({
-      todos: state.todos.map((t) =>
-        t.id === id ? { ...t, completed: !t.completed } : t
+      todos: state.todos.map((todo) =>
+        todo.id === id
+          ? { ...todo, completed: !todo.completed }
+          : todo
       ),
     })),
 
   deleteTodo: (id) =>
     set((state) => ({
-      todos: state.todos.filter((t) => t.id !== id),
+      todos: state.todos.filter((todo) => todo.id !== id),
     })),
 
   clearCompleted: () =>
     set((state) => ({
-      todos: state.todos.filter((t) => !t.completed),
+      todos: state.todos.filter((todo) => !todo.completed),
     })),
 }))

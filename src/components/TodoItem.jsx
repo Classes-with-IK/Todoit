@@ -1,41 +1,30 @@
-import { useTodoStore } from './store/todoStore'
-
-const colors = {
-  Urgent: '#ef4444',
-  Planning: '#3b82f6',
-  Personal: '#10b981',
-}
+import { useTodoStore } from '../store/todoStore'
 
 export default function TodoItem({ todo }) {
-  // Get actions from the store — no longer passed as props
   const toggleTodo = useTodoStore((state) => state.toggleTodo)
   const deleteTodo = useTodoStore((state) => state.deleteTodo)
 
   return (
-    <li className={`todo-item ${todo.completed ? 'completed' : ''}`}>
-      <input
-        type="checkbox"
-        checked={todo.completed}
-        onChange={() => toggleTodo(todo.id)}
-        className="todo-checkbox"
-      />
+    <li className="todo-item">
+      <div>
+        <input
+          type="checkbox"
+          checked={todo.completed}
+          onChange={() => toggleTodo(todo.id)}
+        />
 
-      <span className="todo-text">{todo.text}</span>
+        <span
+          style={{
+            textDecoration: todo.completed ? 'line-through' : 'none',
+          }}
+        >
+          {todo.text}
+        </span>
 
-      <span
-        className="todo-type-badge"
-        style={{ backgroundColor: colors[todo.type] }}
-      >
-        {todo.type}
-      </span>
+        <small className="todo-type">{todo.type}</small>
+      </div>
 
-      <button
-        onClick={() => deleteTodo(todo.id)}
-        className="delete-btn"
-        aria-label="Delete task"
-      >
-        ✕
-      </button>
+      <button onClick={() => deleteTodo(todo.id)}>Delete</button>
     </li>
   )
 }
