@@ -51,6 +51,36 @@ export const useTodoStore = create(
           todos: state.todos.filter((t) => !t.completed),
         })),
     }),
-    { name: "basic_todos" },
+    {
+      name: "basic_todos", // Keep same key for existing users
+
+      /**
+       * WHY PARTIALIZE?
+       * As the store grows, we only want to persist the data (todos), not:
+       * - Action functions (they're recreated on hydration anyway)
+       * - Computed values or derived state
+       * - UI-only state (like filters)
+       *
+       * Benefits:
+       * 1. Smaller localStorage footprint - only essential data
+       * 2. Prevents accidental persistence of non-serializable data
+       * 3. Clear separation between persisted data and runtime behavior
+       * 4. Faster hydration since we load less data
+       *
+       * Without partialize, persist stores the entire state object including all actions.
+       * While persist automatically strips functions, partialize makes the intent explicit
+       * and future-proofs against accidentally adding non-data fields to the store.
+       */
+      partialize: (state) => ({ todos: state.todos }),
+
+      // Optional: Handle migration from old localStorage format
+      // migrate: (persistedState, version) => {
+      //   // If migrating from old format (just array), convert it
+      //   if (Array.isArray(persistedState)) {
+      //     return { todos: persistedState };
+      //   }
+      //   return persistedState;
+      // },
+    },
   ),
 );
