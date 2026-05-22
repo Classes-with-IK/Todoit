@@ -22,7 +22,7 @@ export default function TodoItem({ todo }) {
     >
       <button
         type="button"
-        onClick={() => onToggle(todo.id)}
+        onClick={() => toggleTodo(todo.id)}
         className={`w-8 h-8 rounded-lg border-2 border-[#2D3436] cursor-pointer transition-all flex items-center justify-center shrink-0 ${
           todo.completed ? "bg-[#4ECDC4]" : "bg-white hover:bg-[#FFE66D]/20"
         }`}
@@ -34,7 +34,7 @@ export default function TodoItem({ todo }) {
 
       <div className="flex-1 min-w-0 flex flex-col gap-1">
         <span
-          onClick={() => onToggle(todo.id)}
+          onClick={() => toggleTodo(todo.id)}
           className={`font-bold text-base md:text-lg break-words select-none cursor-pointer ${
             todo.completed ? "line-through text-[#B2BEC3]" : "text-[#2D3436]"
           }`}
@@ -56,7 +56,7 @@ export default function TodoItem({ todo }) {
 
       <button
         type="button"
-        onClick={() => onDelete(todo.id)}
+        onClick={() => deleteTodo(todo.id)}
         className="text-[#FF6B6B] hover:text-[#FF5252] font-black cursor-pointer px-1.5 py-1 text-lg transition-transform active:scale-90"
       >
         ✕

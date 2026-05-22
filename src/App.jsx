@@ -2,14 +2,30 @@ import React, { useState, useEffect } from "react";
 import { Sparkles } from "lucide-react";
 import Header from "./components/Header";
 import TodoForm from "./components/TodoForm";
+import FilterBar from "./components/FilterBar";
 import TodoItem from "./components/TodoItem";
 import TodoLegend from "./components/TodoLegend";
 import { useTodoStore } from "./store/todoStore";
+import { useFilterStore } from "./store/filterStore";
 
 export default function App() {
   const todos = useTodoStore((state) => state.todos);
+  const filter = useFilterStore((state) => state.filter);
+  const addTodo = useTodoStore((state) => state.addTodo);
   const clearCompleted = useTodoStore((state) => state.clearCompleted);
+
   const activeCount = todos.filter((t) => !t.completed).length;
+
+  const [text, setText] = useState("");
+  const [type, setType] = useState("Urgent");
+
+  const handleAdd = (e) => {
+    e.preventDefault();
+    if (!text.trim()) return;
+    addTodo(text.trim(), type);
+    setText("");
+  };
+
   const completedCount = todos.filter((t) => t.completed).length;
 
   return (
@@ -31,13 +47,19 @@ export default function App() {
           onSubmit={handleAdd}
         />
 
+        {/* Filter Bar */}
+        <FilterBar />
+
         {/* Todo List space */}
         <div className="space-y-4 min-h-[150px]">
-          {todos.map((todo) => (
-            <TodoItem key={todo.id} todo={todo} />
-          ))}
+          {todos
+            .filter((todo) => filter === "all" || todo.type === filter)
+            .map((todo) => (
+              <TodoItem key={todo.id} todo={todo} />
+            ))}
 
-          {todos.length === 0 && (
+          {todos.filter((todo) => filter === "all" || todo.type === filter)
+            .length === 0 && (
             <div className="flex flex-col items-center justify-center py-10 text-center">
               <Sparkles className="text-[#FFE66D] mb-1" size={28} />
               <p className="font-extrabold text-[#2D3436] text-base">
@@ -57,7 +79,7 @@ export default function App() {
           </div>
           {completedCount > 0 && (
             <button
-              onClick={handleClearCompleted}
+              onClick={clearCompleted}
               className="text-[#FF6B6B] hover:text-[#FF5252] font-black uppercase tracking-widest transition-colors cursor-pointer"
             >
               Clear Completed
