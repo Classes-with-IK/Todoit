@@ -1,5 +1,5 @@
 // src/App.jsx
-import React, { useState } from "react";
+import React from "react";
 import { Sparkles } from "lucide-react";
 import Header from "./components/Header";
 import TodoForm from "./components/TodoForm";
@@ -10,13 +10,9 @@ import FilterBar from "./components/FilterBar";
 import { useFilterStore } from "./store/filterStore";
 
 export default function App() {
-  // Local form state
-  const [text, setText] = useState("");
-  const [type, setType] = useState("Urgent");
-
   // Read from store
   const todos = useTodoStore((state) => state.todos);
-  const addTodo = useTodoStore((state) => state.addTodo);
+
   const clearCompleted = useTodoStore((state) => state.clearCompleted);
 
   // Read filter from store
@@ -25,30 +21,16 @@ export default function App() {
   const visibleTodos =
     filter === "all" ? todos : todos.filter((t) => t.type === filter);
 
-  // Computed values from store
-  const activeCount = visibleTodos.filter((t) => !t.completed).length;
-  const completedCount = visibleTodos.filter((t) => t.completed).length;
+  // Computed values from visible todos
+  const visibleActiveCount = visibleTodos.filter((t) => !t.completed).length;
+  const visibleCompletedCount = visibleTodos.filter((t) => t.completed).length;
 
-  // Form submission handler
-  const handleAdd = (e) => {
-    e.preventDefault();
-    if (!text.trim()) return;
-    addTodo(text.trim(), type);
-    setText("");
-  };
+  // For total completed count (to show in button)
+  const totalCompletedCount = todos.filter((t) => t.completed).length;
 
-  // Get filter name for empty state message
-  const getFilterName = () => {
-    switch (filter) {
-      case "Urgent":
-        return "Urgent";
-      case "Planning":
-        return "Planning";
-      case "Personal":
-        return "Personal";
-      default:
-        return null;
-    }
+  const handleClearCompleted = () => {
+    console.log("Clearing completed todos...", totalCompletedCount);
+    clearCompleted();
   };
 
   return (
@@ -62,13 +44,7 @@ export default function App() {
         <Header />
 
         {/* Input Form with Priority Pickers */}
-        <TodoForm
-          text={text}
-          setText={setText}
-          type={type}
-          setType={setType}
-          onSubmit={handleAdd}
-        />
+        <TodoForm />
         {/* Filter Bar */}
         <FilterBar />
 
@@ -94,9 +70,10 @@ export default function App() {
         {/* Footer info & action */}
         <div className="mt-8 pt-6 border-t-2 border-[#F1F2F6] flex justify-between items-center text-xs">
           <div className="font-black text-[#2D3436]/60 uppercase tracking-widest font-display">
-            {activeCount} ACTIVE ITEM(S)
+            {visibleActiveCount} ACTIVE ITEM(S) IN VIEW, {visibleCompletedCount}{" "}
+            COMPLETED
           </div>
-          {completedCount > 0 && (
+          {visibleCompletedCount > 0 && (
             <button
               onClick={clearCompleted}
               className="text-[#FF6B6B] hover:text-[#FF5252] font-black uppercase tracking-widest transition-colors cursor-pointer"

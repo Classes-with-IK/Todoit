@@ -1,10 +1,23 @@
 // src/components/TodoForm.jsx
 import React from "react";
 import { Plus } from "lucide-react";
+import { useFormStore } from "../store/formStore";
+import { useTodoStore } from "../store/todoStore";
 
-export default function TodoForm({ text, setText, type, setType, onSubmit }) {
+export default function TodoForm() {
+  const { text, setText, type, setType, reset } = useFormStore();
+  const addTodo = useTodoStore((state) => state.addTodo);
+
+  // Form submission handler
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!text.trim()) return;
+    addTodo(text.trim(), type);
+    reset(); // Clear form after successful add
+  };
+
   return (
-    <form onSubmit={onSubmit} className="space-y-4 mb-8 w-full max-w-xl">
+    <form onSubmit={handleSubmit} className="space-y-4 mb-8 w-full max-w-xl">
       <div className="flex gap-3">
         <input
           type="text"

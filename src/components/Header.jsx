@@ -1,11 +1,16 @@
 // src/components/Header.jsx
 import React from "react";
 import { useTodoStore } from "../store/todoStore";
+import { useFilterStore } from "../store/filterStore";
 
 export default function Header() {
+  const filter = useFilterStore((state) => state.filter);
   const todos = useTodoStore((state) => state.todos);
-  const completedCount = todos.filter((t) => t.completed).length;
-  const totalCount = todos.length;
+
+  const visibleTodos =
+    filter === "all" ? todos : todos.filter((t) => t.type === filter);
+  const completedCount = visibleTodos.filter((t) => t.completed).length;
+  const totalCount = visibleTodos.length;
 
   return (
     <div className="flex justify-between items-end mb-8">
