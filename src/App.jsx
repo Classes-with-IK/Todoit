@@ -6,6 +6,8 @@ import TodoForm from "./components/TodoForm";
 import TodoItem from "./components/TodoItem";
 import TodoLegend from "./components/TodoLegend";
 import { useTodoStore } from "./store/todoStore";
+import FilterBar from "./components/FilterBar";
+import { useFilterStore } from "./store/filterStore";
 
 export default function App() {
   // Local form state
@@ -17,9 +19,15 @@ export default function App() {
   const addTodo = useTodoStore((state) => state.addTodo);
   const clearCompleted = useTodoStore((state) => state.clearCompleted);
 
+  // Read filter from store
+  const filter = useFilterStore((state) => state.filter);
+  // Apply filter to todos
+  const visibleTodos =
+    filter === "all" ? todos : todos.filter((t) => t.type === filter);
+
   // Computed values from store
-  const activeCount = todos.filter((t) => !t.completed).length;
-  const completedCount = todos.filter((t) => t.completed).length;
+  const activeCount = visibleTodos.filter((t) => !t.completed).length;
+  const completedCount = visibleTodos.filter((t) => t.completed).length;
 
   // Form submission handler
   const handleAdd = (e) => {
@@ -27,6 +35,20 @@ export default function App() {
     if (!text.trim()) return;
     addTodo(text.trim(), type);
     setText("");
+  };
+
+  // Get filter name for empty state message
+  const getFilterName = () => {
+    switch (filter) {
+      case "Urgent":
+        return "Urgent";
+      case "Planning":
+        return "Planning";
+      case "Personal":
+        return "Personal";
+      default:
+        return null;
+    }
   };
 
   return (
@@ -47,14 +69,16 @@ export default function App() {
           setType={setType}
           onSubmit={handleAdd}
         />
+        {/* Filter Bar */}
+        <FilterBar />
 
         {/* Todo List space */}
         <div className="space-y-4 min-h-[150px]">
-          {todos.map((todo) => (
+          {visibleTodos.map((todo) => (
             <TodoItem key={todo.id} todo={todo} />
           ))}
 
-          {todos.length === 0 && (
+          {visibleTodos.length === 0 && (
             <div className="flex flex-col items-center justify-center py-10 text-center">
               <Sparkles className="text-[#FFE66D] mb-1" size={28} />
               <p className="font-extrabold text-[#2D3436] text-base">
