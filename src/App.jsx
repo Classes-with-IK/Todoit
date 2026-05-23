@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Sparkles } from "lucide-react";
 import Header from "./components/Header";
 import TodoForm from "./components/TodoForm";
@@ -11,20 +11,9 @@ import { useFilterStore } from "./store/filterStore";
 export default function App() {
   const todos = useTodoStore((state) => state.todos);
   const filter = useFilterStore((state) => state.filter);
-  const addTodo = useTodoStore((state) => state.addTodo);
   const clearCompleted = useTodoStore((state) => state.clearCompleted);
 
   const activeCount = todos.filter((t) => !t.completed).length;
-
-  const [text, setText] = useState("");
-  const [type, setType] = useState("Urgent");
-
-  const handleAdd = (e) => {
-    e.preventDefault();
-    if (!text.trim()) return;
-    addTodo(text.trim(), type);
-    setText("");
-  };
 
   const completedCount = todos.filter((t) => t.completed).length;
 
@@ -39,13 +28,7 @@ export default function App() {
         <Header />
 
         {/* Input Form with Priority Pickers */}
-        <TodoForm
-          text={text}
-          setText={setText}
-          type={type}
-          setType={setType}
-          onSubmit={handleAdd}
-        />
+        <TodoForm />
 
         {/* Filter Bar */}
         <FilterBar />
