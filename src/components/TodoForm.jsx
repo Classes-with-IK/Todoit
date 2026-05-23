@@ -1,18 +1,36 @@
-import React from 'react';
-import { Plus } from 'lucide-react';
+import React from "react";
+import { Plus } from "lucide-react";
+import { useTodoStore } from "../store/todoStore";
+import { useFormStore } from "../store/formStore";
 
-export default function TodoForm({ text, setText, type, setType, onSubmit }) {
+export default function TodoForm() {
+  const text = useFormStore((state) => state.text);
+  const type = useFormStore((state) => state.type);
+  const setText = useFormStore((state) => state.setText);
+  const setType = useFormStore((state) => state.setType);
+  const reset = useFormStore((state) => state.reset);
+
+  const addTodo = useTodoStore((state) => state.addTodo);
+
+  const handleAdd = (e) => {
+    e.preventDefault();
+    if (!text.trim()) return;
+
+    addTodo(text.trim(), type);
+    reset();
+  };
+
   return (
-    <form onSubmit={onSubmit} className="space-y-4 mb-8">
+    <form onSubmit={handleAdd} className="space-y-4 mb-8">
       <div className="flex gap-3">
-        <input 
-          type="text" 
+        <input
+          type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="What's next on the list?" 
+          placeholder="What's next on the list?"
           className="flex-1 bg-[#F1F2F6] border-2 border-[#2D3436] rounded-2xl px-5 py-3.5 font-bold text-base placeholder:text-[#B2BEC3] focus:outline-none focus:ring-4 focus:ring-[#4ECDC4]/20 transition-all"
         />
-        <button 
+        <button
           type="submit"
           className="bg-[#FF6B6B] border-2 border-[#2D3436] text-white font-black text-sm px-6 rounded-2xl shadow-[4px_4px_0_0_#2D3436] active:translate-y-1 active:shadow-none cursor-pointer transition-all flex items-center justify-center gap-1"
         >
@@ -22,12 +40,14 @@ export default function TodoForm({ text, setText, type, setType, onSubmit }) {
       </div>
 
       <div className="flex items-center gap-2.5 pt-1">
-        <span className="text-[10px] font-black uppercase tracking-wider text-[#2D3436]/55 font-display">Rank Tag:</span>
-        {['Urgent', 'Planning', 'Personal'].map((tName) => {
+        <span className="text-[10px] font-black uppercase tracking-wider text-[#2D3436]/55 font-display">
+          Rank Tag:
+        </span>
+        {["Urgent", "Planning", "Personal"].map((tName) => {
           const colors = {
-            Urgent: 'bg-[#FF6B6B] text-white',
-            Planning: 'bg-[#4ECDC4] text-[#2D3436]',
-            Personal: 'bg-[#FFE66D] text-[#2D3436]'
+            Urgent: "bg-[#FF6B6B] text-white",
+            Planning: "bg-[#4ECDC4] text-[#2D3436]",
+            Personal: "bg-[#FFE66D] text-[#2D3436]",
           };
           const isSelected = type === tName;
           return (
@@ -36,7 +56,9 @@ export default function TodoForm({ text, setText, type, setType, onSubmit }) {
               type="button"
               onClick={() => setType(tName)}
               className={`px-3 py-1 rounded-full text-xs font-black border-2 border-[#2D3436] cursor-pointer transition-all ${
-                isSelected ? `${colors[tName]} shadow-[2px_2px_0_0_#2D3436]` : 'bg-white text-[#2D3436]/60 hover:bg-slate-50'
+                isSelected
+                  ? `${colors[tName]} shadow-[2px_2px_0_0_#2D3436]`
+                  : "bg-white text-[#2D3436]/60 hover:bg-slate-50"
               }`}
             >
               {tName}
