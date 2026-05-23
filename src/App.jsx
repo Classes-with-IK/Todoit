@@ -1,4 +1,4 @@
-import Header from './components/Header'
+﻿import Header from './components/Header'
 import TodoForm from './components/TodoForm'
 import FilterBar from './components/FilterBar'
 import TodoItem from './components/TodoItem'
@@ -27,13 +27,13 @@ export default function App() {
         <TodoForm />
         <FilterBar />
 
-        <ul className="todo-list">
+        <ul className="space-y-3">
           {visibleTodos.length === 0 ? (
-            <p className="empty-state">
+            <li className="rounded-3xl border border-dashed border-slate-700 bg-slate-900/80 px-6 py-10 text-center text-slate-400">
               {filter === 'all'
                 ? 'Perfect peace! No tasks.'
                 : `No ${filter} tasks right now.`}
-            </p>
+            </li>
           ) : (
             visibleTodos.map((todo) => (
               <TodoItem key={todo.id} todo={todo} />
@@ -41,7 +41,7 @@ export default function App() {
           )}
         </ul>
 
-        <footer className="footer">
+        <footer className="mt-6 flex flex-col gap-3 rounded-3xl border border-slate-700 bg-slate-950/70 px-5 py-4 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between">
           <span>
             {activeCount} task{activeCount !== 1 ? 's' : ''} left
           </span>
