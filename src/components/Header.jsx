@@ -8,9 +8,9 @@ export default function Header() {
   return (
     <header className="header">
       <div>
-        <h1>Todoit</h1>
+        <h1>To Do Tasks</h1>
         <p className="text-sm text-slate-500 mt-0.5">
-          Stay on top of things.
+          Work on my Tasks.
         </p>
       </div>
       <p className="header-stats">
