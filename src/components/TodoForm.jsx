@@ -14,13 +14,12 @@ export default function TodoForm() {
     const trimmedText = text.trim()
     if (!trimmedText) return
 
-    addTodo({
-      id: Date.now(),
-      text: trimmedText,
-      type,
-      completed: false,
-    })
-
+   addTodo({
+  id: crypto.randomUUID(), // ✅ guaranteed unique
+  text: trimmedText,
+  type,
+  completed: false,
+})
     setText('')
   }
 
