@@ -15,12 +15,11 @@ export default function TodoForm() {
     if (!trimmedText) return
 
     addTodo({
-      id: Date.now(),
-      text: trimmedText,
-      type,
-      completed: false,
-    })
-
+  id: crypto.randomUUID(), // ✅ guaranteed unique
+  text: trimmedText,
+  type,
+  completed: false,
+})
     setText('')
   }
 
