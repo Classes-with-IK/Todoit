@@ -2,7 +2,7 @@
 import TodoForm from './components/TodoForm'
 import FilterBar from './components/FilterBar'
 import TodoItem from './components/TodoItem'
-
+import TodoLegend from './components/TodoLegend'
 import { useTodoStore } from './store/todoStore'
 import { useFilterStore } from './store/filterStore'
 
@@ -27,11 +27,11 @@ export default function App() {
         <TodoForm />
         <FilterBar />
 
-        <ul className="space-y-3">
+        <ul className="space-y-3 list-none p-0 m-0">
           {visibleTodos.length === 0 ? (
-            <li className="rounded-3xl border border-dashed border-slate-700 bg-slate-900/80 px-6 py-10 text-center text-slate-400">
+            <li className="empty-state">
               {filter === 'all'
-                ? 'Perfect peace! No tasks.'
+                ? '🌿 Perfect peace! No tasks.'
                 : `No ${filter} tasks right now.`}
             </li>
           ) : (
@@ -41,17 +41,18 @@ export default function App() {
           )}
         </ul>
 
-        <footer className="mt-6 flex flex-col gap-3 rounded-3xl border border-slate-700 bg-slate-950/70 px-5 py-4 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between">
+        <footer className="footer">
           <span>
             {activeCount} task{activeCount !== 1 ? 's' : ''} left
           </span>
-
           {completedCount > 0 && (
             <button onClick={clearCompleted} className="clear-btn">
               Clear Completed ({completedCount})
             </button>
           )}
         </footer>
+
+        <TodoLegend />
       </div>
     </div>
   )
