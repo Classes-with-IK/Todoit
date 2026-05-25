@@ -1,18 +1,29 @@
-import React from 'react';
 import { Plus } from 'lucide-react';
+import { useTodoStore } from '../store/todoStore';
+import { useFormStore } from '../store/formStore';
 
-export default function TodoForm({ text, setText, type, setType, onSubmit }) {
+export default function TodoForm() {
+  const { text, type, setText, setType, reset } = useFormStore();
+  const addTodo = useTodoStore((state) => state.addTodo);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!text.trim()) return;
+    addTodo(text.trim(), type);
+    reset();
+  };
+
   return (
-    <form onSubmit={onSubmit} className="space-y-4 mb-8">
+    <form onSubmit={handleSubmit} className="space-y-4 mb-8">
       <div className="flex gap-3">
-        <input 
-          type="text" 
+        <input
+          type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="What's next on the list?" 
+          placeholder="What's next on the list?"
           className="flex-1 bg-[#F1F2F6] border-2 border-[#2D3436] rounded-2xl px-5 py-3.5 font-bold text-base placeholder:text-[#B2BEC3] focus:outline-none focus:ring-4 focus:ring-[#4ECDC4]/20 transition-all"
         />
-        <button 
+        <button
           type="submit"
           className="bg-[#FF6B6B] border-2 border-[#2D3436] text-white font-black text-sm px-6 rounded-2xl shadow-[4px_4px_0_0_#2D3436] active:translate-y-1 active:shadow-none cursor-pointer transition-all flex items-center justify-center gap-1"
         >
