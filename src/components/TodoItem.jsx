@@ -1,56 +1,56 @@
-import React from 'react';
-import { Check } from 'lucide-react';
+﻿import { useTodoStore } from '../store/todoStore'
 
-export default function TodoItem({ todo, onToggle, onDelete }) {
-  const labelColors = {
-    Urgent: 'bg-[#FF6B6B] text-white',
-    Planning: 'bg-[#4ECDC4] text-[#2D3436]',
-    Personal: 'bg-[#FFE66D] text-[#2D3436]'
-  };
+const TYPE_COLORS = {
+  Urgent:   { bg: '#fef2f2', text: '#ef4444', border: '#fecaca' },
+  Planning: { bg: '#eff6ff', text: '#3b82f6', border: '#bfdbfe' },
+  Personal: { bg: '#f0fdf4', text: '#10b981', border: '#bbf7d0' },
+}
+
+export default function TodoItem({ todo }) {
+  const toggleTodo = useTodoStore((state) => state.toggleTodo)
+  const deleteTodo = useTodoStore((state) => state.deleteTodo)
+
+  const colors = TYPE_COLORS[todo.type] || { bg: '#f8fafc', text: '#64748b', border: '#e2e8f0' }
 
   return (
-    <div 
-      className={`flex items-center gap-4 border-2 border-[#2D3436] p-4 rounded-3xl transition-all ${
-        todo.completed 
-          ? 'bg-[#F9F9F9] opacity-60 text-[#B2BEC3] border-[#2D3436]/50' 
-          : 'bg-white shadow-[4px_4px_0_0_#2D3436]'
-      }`}
-    >
-      <button
-        type="button"
-        onClick={() => onToggle(todo.id)}
-        className={`w-8 h-8 rounded-lg border-2 border-[#2D3436] cursor-pointer transition-all flex items-center justify-center shrink-0 ${
-          todo.completed ? 'bg-[#4ECDC4]' : 'bg-white hover:bg-[#FFE66D]/20'
-        }`}
-      >
-        {todo.completed && <Check size={16} strokeWidth={4} className="text-white" />}
-      </button>
-
-      <div className="flex-1 min-w-0 flex flex-col gap-1">
-        <span 
-          onClick={() => onToggle(todo.id)}
-          className={`font-bold text-base md:text-lg break-words select-none cursor-pointer ${
-            todo.completed ? 'line-through text-[#B2BEC3]' : 'text-[#2D3436]'
-          }`}
-        >
-          {todo.text}
-        </span>
-        <div className="flex">
-          <span className={`text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border border-[#2D3436] ${
-            todo.completed ? 'bg-slate-100 text-slate-400 border-slate-300' : labelColors[todo.type]
+    <li className={`todo-item ${todo.completed ? 'completed' : ''}`}>
+      {/* Checkbox + text */}
+      <label className="flex items-start gap-3 cursor-pointer sm:items-center flex-1 min-w-0">
+        <input
+          type="checkbox"
+          checked={todo.completed}
+          onChange={() => toggleTodo(todo.id)}
+          className="mt-0.5 h-5 w-5 shrink-0 rounded accent-sky-500 cursor-pointer sm:mt-0"
+        />
+        <div className="min-w-0 flex-1">
+          <p className={`text-sm leading-snug ${
+            todo.completed
+              ? 'line-through text-slate-400'
+              : 'text-slate-800'
           }`}>
+            {todo.text}
+          </p>
+          {/* Type badge */}
+          <span
+            className="mt-1.5 inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide"
+            style={{
+              backgroundColor: colors.bg,
+              color: colors.text,
+              border: `1px solid ${colors.border}`,
+            }}
+          >
             {todo.type}
           </span>
         </div>
-      </div>
+      </label>
 
-      <button 
-        type="button"
-        onClick={() => onDelete(todo.id)}
-        className="text-[#FF6B6B] hover:text-[#FF5252] font-black cursor-pointer px-1.5 py-1 text-lg transition-transform active:scale-90"
+      {/* Delete */}
+      <button
+        onClick={() => deleteTodo(todo.id)}
+        className="shrink-0 inline-flex items-center justify-center rounded-xl border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-600 transition-colors hover:border-rose-300 hover:bg-rose-100"
       >
-        ✕
+        Delete
       </button>
-    </div>
-  );
+    </li>
+  )
 }
