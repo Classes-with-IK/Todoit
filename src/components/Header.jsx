@@ -1,4 +1,4 @@
-import { useTodoStore } from '../store/todoStore';
+import { useTodoStore } from '../store/TodoStore';
 
 export default function Header() {
   const todos = useTodoStore((state) => state.todos);

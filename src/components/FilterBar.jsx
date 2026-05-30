@@ -1,4 +1,4 @@
-import { useFilterStore } from '../store/filterStore';
+import { useFilterStore } from '../store/FilterStore';
 
 export default function FilterBar() {
   const { filter, setFilter } = useFilterStore();
